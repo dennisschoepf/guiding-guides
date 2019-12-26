@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import firebase from 'firebase/app';
 import 'firebase/database';
+import MarkerInput from './components/MarkerInput/MarkerInput';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBWBOepH5ohUyZmRtsDzGjg0KoroNpzC74",
@@ -16,13 +17,18 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+const markers = [ 1, 2, 3, 4, 5, 6 ];
+
 function App() {
   const writeSchedule = () => firebase.database().ref('schedule').set(true);
 
   return (
-    <div>
-      Test
-      <button onClick={writeSchedule}>Click</button>
+    <div className="container">
+      { markers.map((marker, index) => (
+        <div className="element">
+          <MarkerInput index={index + 1} />
+        </div>
+      )) }
     </div>
   );
 }

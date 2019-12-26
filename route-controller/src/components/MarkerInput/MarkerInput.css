@@ -1,0 +1,17 @@
+.markerInputButton {
+  font-weight: bold;
+  font-size: 18px;
+  height: 80px;
+  border: 0;
+  background-color: lightseagreen;
+  color: darkslategray;
+}
+
+.markerInputButton.checked {
+  color: lightseagreen;
+  background-color: darkslategray;
+}
+
+.markerInputButton.checked:focus, .markerInputButton.checked:active {
+  outline: 0;
+}
