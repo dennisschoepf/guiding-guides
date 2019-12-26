@@ -1,0 +1,19 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+/map-visualization/node_modules
+/map-visualization/.pnp
+/map-visualization/.pnp.js
+/map-visualization/coverage
+/map-visualization/build
+
+/route-controller/node_modules
+/route-controller/.pnp
+/route-controller/.pnp.js
+/route-controller/coverage
+/route-controller/build
+
+/schedule/node_modules
+/schedule/.pnp
+/schedule/.pnp.js
+/schedule/coverage
+/schedule/build
