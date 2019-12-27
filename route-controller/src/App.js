@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import firebase from 'firebase/app';
 import 'firebase/database';
@@ -17,16 +17,51 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const markers = [ 1, 2, 3, 4, 5, 6 ];
+const initialMarkerState = {
+  'marker-1': {
+    markerNumber: 1,
+    selectedStop: 0
+  },
+  'marker-2': {
+    markerNumber: 2,
+    selectedStop: 0
+  },
+  'marker-3': {
+    markerNumber: 3,
+    selectedStop: 0
+  },
+  'marker-4': {
+    markerNumber: 4,
+    selectedStop: 0
+  },
+};
 
 function App() {
-  const writeSchedule = () => firebase.database().ref('schedule').set(true);
+  const [markerState, setMarkerState] = useState(initialMarkerState);
+  useEffect(() => {
+    firebase.database().ref('schedule').set(markerState);
+    return () => {};
+  }, [markerState])
+
+  const handleMarkerSet = (newMarkerNumber, stop) => {
+    setMarkerState({
+      ...markerState,
+      [`marker-${newMarkerNumber}`]: {
+        ...markerState[`marker-${newMarkerNumber}`],
+        selectedStop: stop
+      }
+    });
+  };
 
   return (
     <div className="container">
-      { markers.map((marker, index) => (
-        <div className="element">
-          <MarkerInput index={index + 1} />
+      { Object.keys(markerState).map((markerKey, i) => (
+        <div className="element" key={i}>
+          <MarkerInput
+            markerNumber={markerState[markerKey].markerNumber}
+            selectedStop={markerState[markerKey].selectedStop}
+            onMarkerSet={handleMarkerSet}
+          />
         </div>
       )) }
     </div>

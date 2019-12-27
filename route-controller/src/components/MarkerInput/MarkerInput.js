@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import cx from 'classnames';
 import './MarkerInput.css';
 
-const options = [ 0, 1, 2, 3, 4, 5, 6 ];
+const stops = [ 0, 1, 2, 3, 4, 5, 6 ];
 
 function MarkerInput ({
-  index
+  markerNumber,
+  selectedStop,
+  onMarkerSet,
 }) {
-  const [selected, setSelected] = useState(0);
-
   return (
     <div className="markerInput">
-      <h2>Marker <strong>{ index }</strong></h2>
+      <h2>Marker <strong>{ markerNumber }</strong></h2>
       <div>
         {
-          options.map(option => (
+          stops.map(stop => (
             <button
-              className={cx({ markerInputButton: true, checked: selected === option })}
-              key={option}
-              onClick={() => setSelected(option)}
-              style={{ width: `${100 / options.length}%` }}
+              className={cx({ markerInputButton: true, checked: selectedStop === stop })}
+              key={stop}
+              onClick={() => onMarkerSet(markerNumber, stop)}
+              style={{ width: `${100 / stops.length}%` }}
             >
-              { option !== 0 ? `Stop ${option}` : 'Not placed' }
+              { stop !== 0 ? `Stop ${stop}` : 'Not placed' }
             </button>
           ))
         }
