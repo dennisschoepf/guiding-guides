@@ -20,7 +20,7 @@ firebase.initializeApp(firebaseConfig);
 const initialMarkerState = {
   'marker-1': {
     markerNumber: 1,
-    selectedStop: 0
+    selectedStop: 0,
   },
   'marker-2': {
     markerNumber: 2,
