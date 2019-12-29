@@ -4,6 +4,7 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 import map from './assets/map.svg';
 import sightSlots from './assets/sightSlots.svg';
+import route from './assets/route_1-2.svg';
 import Routes from './Routes/Routes';
 
 const firebaseConfig = {
