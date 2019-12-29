@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useObject } from 'react-firebase-hooks/database';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import map from './assets/map.svg';
 import sightSlots from './assets/sightSlots.svg';
-import route from './assets/route_1-2.svg';
 import Routes from './Routes/Routes';
 
 const firebaseConfig = {
@@ -36,6 +36,8 @@ const Layer = styled.img`
 `;
 
 function App() {
+  const [value, loading, error] = useObject(firebase.database().ref('schedule'));
+
   return (
     <Container>
       <Element zIndex={4}><Routes /></Element>
