@@ -61,12 +61,17 @@ function displaySchedule(loading, error, value, stops) {
     return (
       <div>
         {
-          displayableSchedule.map((slot, i) => (
-            <Slot grey={i % 2 === 0}>
-              <SlotTitle>{slot.name}</SlotTitle>
-              <SlotTime>{slot.startTime} - {slot.endTime}</SlotTime>
-            </Slot>
-          ))
+          displayableSchedule.map((slot, i) => {
+            if (slot.name && slot.startTime && slot.endTime) {
+              return (
+                <Slot grey={i % 2 === 0}>
+                  <SlotTitle>{slot.name}</SlotTitle>
+                  <SlotTime>{slot.startTime} - {slot.endTime}</SlotTime>
+                </Slot>
+              );
+            }
+            return;
+          })
         }
       </div>
     );
