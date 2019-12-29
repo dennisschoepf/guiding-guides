@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useObject } from 'react-firebase-hooks/database';
 import firebase from 'firebase/app';
@@ -20,7 +20,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const Container = styled.div`
-  position: relative;
+  position: relative;x
 `;
 
 const Element = styled.div`
@@ -36,11 +36,29 @@ const Layer = styled.img`
 `;
 
 function App() {
+  const [route, setRoute] = useState([]);
   const [value, loading, error] = useObject(firebase.database().ref('schedule'));
+  if (value) {
+    const schedule = value.val();
+    const newRoute = Object.values(schedule).map((markerData, i) => {
+      if ((i + 1) < Object.values(schedule).length) {
+        const start = markerData.selectedStop;
+        const end = schedule[`marker-${i+2}`].selectedStop;
+        return `${start < end ? start : end}-${end > start ? end : start}`;
+      } else { return null; };
+    }).filter(el => el !== null);
+
+    if (!newRoute.every((connection, i) => connection === route[i])) {
+      setRoute(newRoute);
+    }
+  }
 
   return (
     <Container>
-      <Element zIndex={4}><Routes /></Element>
+      {
+        !loading && !error && value &&
+        <Element zIndex={4}><Routes route={route} /></Element>
+      }
       <Element zIndex={3}><Layer src={sightSlots} /></Element>
       <Element zIndex={2}><Layer src={map} /></Element>
     </Container>
