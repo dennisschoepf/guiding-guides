@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import { useObject, useObjectVal } from 'react-firebase-hooks/database';
-import { createDisplayableSchedule } from './helpers';
+import Schedule from './components/Schedule';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBWBOepH5ohUyZmRtsDzGjg0KoroNpzC74",
@@ -17,65 +17,51 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
+const TitleContainer = styled.div`
+  background-color: #454F63;
+  margin: 10px;
+  padding: 45px 15px 15px;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+`;
+
 const Title = styled.h1`
-  font-size: 32px;
-  margin: 15px;
-`;
-
-const Container = styled.div`
-  padding: 15px;
-`;
-
-const Slot = styled.div`
-  width: 100%;
-  background-color: ${props => props.grey ? '#eeeeee' : 'white'};
-  padding: 15px;
-`;
-
-const SlotTitle = styled.h2`
-  font-size: 22px;
+  color: #fff;
+  font-size: 24px;
   margin: 0;
 `;
 
-const SlotTime = styled.div`
-  color: green;
+const AppointmentNumber = styled.span`
+  color: #CDD9F0;
 `;
 
 function App() {
   const stops = useObjectVal(firebase.database().ref('stops'))[0];
   const [value, loading, error] = useObject(firebase.database().ref('schedule'));
+  let numberOfAppointments = null;
+
+  if (value) {
+    const markerPositions = value.val();
+    numberOfAppointments = Object.keys(markerPositions).reduce((acc, curr) => markerPositions[curr].selectedStop !== 0 ? acc + 1 : acc, 0);
+  }
 
   return (
     <div>
-      <Title>Your schedule:</Title>
-      {displaySchedule(loading, error, value, stops)}
+      <TitleContainer>
+        <Title>Beijing Travel Group</Title>
+        {
+          numberOfAppointments &&
+          <AppointmentNumber>{numberOfAppointments} appointments - 15 participants</AppointmentNumber>
+        }
+      </TitleContainer>
+      <Schedule
+        loading={loading}
+        error={error}
+        value={value}
+        stops={stops}
+      />
     </div>
   );
-}
-
-function displaySchedule(loading, error, value, stops) {
-  if (loading) return <Container>Loading ...</Container>;
-  if (error) return <Container>Error</Container>;
-  if (value) {
-    const displayableSchedule = createDisplayableSchedule(value.val(), stops);
-    return (
-      <div>
-        {
-          displayableSchedule.map((slot, i) => {
-            if (slot.name && slot.startTime && slot.endTime) {
-              return (
-                <Slot grey={i % 2 === 0}>
-                  <SlotTitle>{slot.name}</SlotTitle>
-                  <SlotTime>{slot.startTime} - {slot.endTime}</SlotTime>
-                </Slot>
-              );
-            }
-            return;
-          })
-        }
-      </div>
-    );
-  }
 }
 
 export default App;
