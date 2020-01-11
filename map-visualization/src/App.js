@@ -4,8 +4,10 @@ import { useObject } from 'react-firebase-hooks/database';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import map from './assets/map.svg';
+import trump from './assets/sedonaldrveimage.jpeg'
 import sightSlots from './assets/sightSlots.svg';
 import Routes from './Routes/Routes';
+import Hotspots from './Routes/Hotspots';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBWBOepH5ohUyZmRtsDzGjg0KoroNpzC74",
@@ -36,10 +38,13 @@ const Layer = styled.img`
 `;
 
 function App() {
+  const [hotspots, setHotspots] = useState([]);
   const [route, setRoute] = useState([]);
-  const [value, loading, error] = useObject(firebase.database().ref('schedule'));
-  if (value) {
-    const schedule = value.val();
+  const [scheduleVal, scheduleLoading, scheduleError] = useObject(firebase.database().ref('schedule'));
+  const [hotspotVal, loading, error] = useObject(firebase.database().ref('stops'));
+
+  if (scheduleVal) {
+    const schedule = scheduleVal.val();
     const newRoute = Object.values(schedule).map((markerData, i) => {
       if ((i + 1) < Object.values(schedule).length) {
         const start = markerData.selectedStop;
@@ -53,12 +58,21 @@ function App() {
     }
   }
 
+  if (hotspotVal) {
+    const newHotspots = Object.values(hotspotVal.val()).map(stop => stop.hotspotColor);
+
+    if (!newHotspots.every((hotspot, i) => hotspot === hotspots[i])) {
+      setHotspots(newHotspots);
+    }
+  }
+
   return (
     <Container>
       {
-        !loading && !error && value &&
-        <Element zIndex={4}><Routes route={route} /></Element>
+        !scheduleLoading && !scheduleError && scheduleVal &&
+        <Element zIndex={5}><Routes route={route} /></Element>
       }
+      <Element zIndex={4}><Hotspots hotspots={hotspots} /></Element>
       <Element zIndex={3}><Layer src={sightSlots} /></Element>
       <Element zIndex={2}><Layer src={map} /></Element>
     </Container>

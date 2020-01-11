@@ -39,7 +39,6 @@ function App() {
   const stops = useObjectVal(firebase.database().ref('stops'))[0];
   const [value, loading, error] = useObject(firebase.database().ref('schedule'));
   let numberOfAppointments = null;
-console.log(value);
 
   if (value) {
     const markerPositions = value.val();
