@@ -53,8 +53,13 @@ function App() {
     });
   };
 
+  const resetSchedule = () => {
+    setMarkerState(initialMarkerState);
+  };
+
   return (
     <div className="container">
+      <button className="reset" onClick={resetSchedule}>Reset</button>
       { Object.keys(markerState).map((markerKey, i) => (
         <div className="element" key={i}>
           <MarkerInput
