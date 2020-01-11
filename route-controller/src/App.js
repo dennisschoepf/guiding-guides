@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { useObject } from 'react-firebase-hooks/database';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import MarkerInput from './components/MarkerInput/MarkerInput';
+import HotspotInput from './components/HotspotInput/HotspotInput';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBWBOepH5ohUyZmRtsDzGjg0KoroNpzC74",
@@ -36,12 +38,47 @@ const initialMarkerState = {
   },
 };
 
+const initialHotspotState = {
+  'stop-1': {
+    name: 'Schloss Mirabell',
+    hotspotColor: '',
+  },
+  'stop-2': {
+    name: 'Kapuzinerkloster',
+    hotspotColor: '',
+  },
+  'stop-3': {
+    name: 'Schloss Arenberg',
+    hotspotColor: '',
+  },
+  'stop-4': {
+    name: "Mozart's Geburthaus",
+    hotspotColor: '',
+  },
+  'stop-5': {
+    name: 'Stift St. Peter',
+    hotspotColor: '',
+  },
+  'stop-6': {
+    name: 'Stift Nonnberg',
+    hotspotColor: '',
+  },
+};
+
 function App() {
   const [markerState, setMarkerState] = useState(initialMarkerState);
+  const [hotspotState, setHotspotState] = useState(initialHotspotState);
+  const [value, loading, error] = useObject(firebase.database().ref('stops'));
+
   useEffect(() => {
     firebase.database().ref('schedule').set(markerState);
     return () => {};
-  }, [markerState])
+  }, [markerState]);
+
+  useEffect(() => {
+    firebase.database().ref('stops').set(hotspotState);
+    return () => {};
+  }, [hotspotState]);
 
   const handleMarkerSet = (newMarkerNumber, stop) => {
     setMarkerState({
@@ -53,13 +90,27 @@ function App() {
     });
   };
 
+  const handleHotspotSet = (stopKey, newColor) => {
+    setHotspotState({
+      ...hotspotState,
+      [stopKey]: {
+        ...hotspotState[stopKey],
+        hotspotColor: newColor
+      }
+    });
+  };
+
   const resetSchedule = () => {
     setMarkerState(initialMarkerState);
   };
 
+  const resetStops = () => {
+    setHotspotState(initialHotspotState);
+  };
+
   return (
     <div className="container">
-      <button className="reset" onClick={resetSchedule}>Reset</button>
+      <button className="reset" onClick={resetSchedule}>Reset Route</button>
       { Object.keys(markerState).map((markerKey, i) => (
         <div className="element" key={i}>
           <MarkerInput
@@ -69,6 +120,19 @@ function App() {
           />
         </div>
       )) }
+      <button className="reset" onClick={resetStops}>Reset Hotspots</button>
+      { !loading && !error &&
+        Object.keys(hotspotState).map((spotKey, i) => (
+          <React.Fragment key={i}>
+            <HotspotInput
+              objectKey={spotKey}
+              name={hotspotState[spotKey].name}
+              selectedColor={hotspotState[spotKey].hotspotColor}
+              onHotspotSet={handleHotspotSet}
+            />
+          </React.Fragment>
+        ))
+      }
     </div>
   );
 }

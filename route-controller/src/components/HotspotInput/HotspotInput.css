@@ -1,0 +1,20 @@
+.hotspotInputContainer {
+  display: flex;
+  flex-direction: column;
+  width: calc(16.66667% - 20px);
+  padding: 10px;
+}
+
+.hotspotInputButton {
+  width: 100%;
+  background-color: lightseagreen;
+  color: darkslategray;
+  outline: 0;
+  border: 0;
+  padding: 10px 5px;
+}
+
+.hotspotInputButton.checked {
+  color: lightseagreen;
+  background-color: darkslategray;
+}
