@@ -8,6 +8,7 @@ import trump from './assets/sedonaldrveimage.jpeg'
 import sightSlots from './assets/sightSlots.svg';
 import Routes from './Routes/Routes';
 import Hotspots from './Routes/Hotspots';
+import Labels from './Routes/Labels';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBWBOepH5ohUyZmRtsDzGjg0KoroNpzC74",
@@ -68,6 +69,10 @@ function App() {
 
   return (
     <Container>
+      {
+        hotspotVal &&
+        <Element zIndex={6}><Labels names={Object.values(hotspotVal.val()).map(stop => stop.name)} /></Element>
+      }
       {
         !scheduleLoading && !scheduleError && scheduleVal &&
         <Element zIndex={5}><Routes route={route} /></Element>
